@@ -24,15 +24,19 @@ app.use(express.urlencoded({ extended: true }))
 
 //post new quake data
 
-app.get(`/welcome:username`, async (req, res) => {
-    let username = req.query.username
-        
-    res.send('Welcome, please login or signup to continue.')
+app.get(`/main/${username}`, async (req, res) => {
+    //let username = req.query.username
+    //let user_info = await db('users').where({username: username}).first()
+    //let user_zip = user_info.zipcode;
+    
+
+    res.json(earthquakes)
 })
 
 app.post('/signup', async (req, res) => {
-    console.log('request here')
+    
 
+    try {
     let body = req.body
     let user = req.body.username
     let pass = req.body.password
@@ -47,18 +51,12 @@ app.post('/signup', async (req, res) => {
     let newUser = await db('users').insert({username: user, password: pass, zipcode: zip})
     if (newUser) {
         console.log('new user created')
-        res.status(201).json({message: 'User created successfully'})
+        res.status(201).json({info: newUser})
+    }
+    }  catch (err) {
+        res.json(err)
     }
 
-
- //getQuakes();
-    // knex.insert({username: user, password: pass, zipcode: zip}).into('users')
-    // .then(() => {
-    //     res.status(201).json({message: 'User created successfully'})
-    // })
-    // .catch((err) => {
-    //     res.status(500).json({message: 'Error creating user', error: err})
-    // })
 })
 
 app.post('/login', async (req, res) => {
@@ -71,16 +69,11 @@ app.post('/login', async (req, res) => {
             let zip = Number(req.body.zipcode)
             let user_info = await db('users').where({username: user, password: pass}).first()
             if (user_info && user_info.password === pass) {
-                res.status(200).json('Login Successful')
+                res.status(200).json({info: user_info})
             }
         } catch (err) {
             res.json(err)
         }
-        //setUserData(userInfo);
-
-        //console.log(coordinates, 'the coords')
-        //setQuakes(coordinates) 
-        //console.log(quakes, 'the quakes')
     
     //call the controller functions that connect to the postgres database (quakefeed ==> the users table)
     //use the zipcode npm dependency to determine the latitude and longitude of the zipcode provided by the user

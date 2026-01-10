@@ -9,7 +9,7 @@ exports.up = async function(knex) {
         table.string('username');
         table.string('password');
         table.integer('zipcode');
-        // table.specificType('earthquakes', 'text[]');
+        table.specificType('earthquakes', 'text[]');
     })
 };
 
