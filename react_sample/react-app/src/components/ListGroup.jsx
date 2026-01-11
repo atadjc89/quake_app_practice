@@ -9,11 +9,9 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
-import {Input, FormControl, InputLabel, FormHelperText} from "@mui/material";
+import { Input, FormControl, InputLabel, FormHelperText } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import "bootstrap/dist/css/bootstrap.min.css";
-
-
 
 const getMessage = () => {
   return items.length === 0 ? <p>No items found</p> : null;
@@ -26,7 +24,9 @@ function ListGroup() {
   const [password, setPassword] = useState("");
   const [zipcode, setZipcode] = useState("");
 
-  const formData = {
+  const formData = new FormData();
+
+  const form_info = {
     username: username,
     password: password,
     zipcode: zipcode,
@@ -45,143 +45,57 @@ function ListGroup() {
   };
 
   const loginForm = (
-<></>
-  )
-    // <>
-    {/* <div class="row">
-    <form class="col s12">
-      <div class="row">
-        <div class="input-field col s6">
-          <input placeholder="Placeholder" id="first_name" type="text" class="validate">
-          <label for="first_name">First Name</label>
+    <>
+      <form>
+        <div>
+          <label for="username">Username:</label>
+          <Input name="username" required>
+            {" "}
+          </Input>
         </div>
-        <div class="input-field col s6">
-          <input id="last_name" type="text" class="validate">
-          <label for="last_name">Last Name</label>
+        <div>
+          <label for="password">Password:</label>
+          <Input name="password" type="password" required>
+            {" "}
+          </Input>
         </div>
-      </div>
-      <div class="row">
-        <div class="input-field col s12">
-          <input disabled value="I am not editable" id="disabled" type="text" class="validate">
-          <label for="disabled">Disabled</label>
-        </div>
-      </div>
-      <div class="row">
-        <div class="input-field col s12">
-          <input id="password" type="password" class="validate">
-          <label for="password">Password</label>
-        </div>
-      </div>
-    </form>
-    </div>
-    </> */}
-  
-    
-{/* 
-      <FormControl>
-        <InputLabel htmlFor="my-input">Email address</InputLabel>
-        <Input id="my-input" aria-describedby="my-helper-text" />
-        <FormHelperText id="my-helper-text">
-          We'll never share your email.
-        </FormHelperText>
-      </FormControl>
-        <FormControl>
-        <InputLabel htmlFor="my-input">Email address</InputLabel>
-        <Input id="my-input" aria-describedby="my-helper-text" />
-        <FormHelperText id="my-helper-text">
-          We'll never share your email.
-        </FormHelperText>
-      </FormControl>
-        <FormControl>
-        <InputLabel htmlFor="my-input">Email address</InputLabel>
-        <Input id="my-input" aria-describedby="my-helper-text" />
-        <FormHelperText id="my-helper-text">
-          We'll never share your email.
-        </FormHelperText>
-      </FormControl> */}
 
-      {/* <Input>
-        <TextField
-          className="list-group-item"
-          type="text"
-          label="Username"
-          color="secondary"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          focused
-        />
-      </Input>
-      <Input>
-        <TextField
-          className="list-group-item"
-          type="password"
-          label="Password"
-          color="secondary"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          focused
-        />
-      </Input>
-      <Input>
-        <TextField
-          className="list-group-item"
-          type="text"
-          label="Zipcode"
-          color="secondary"
-          value={zipcode}
-          onChange={(e) => setZipcode(e.target.value)}
-          focused
-        />
-      </Input> */}
-      {/* <Input>
-            <TextField label="Outlined secondary" color="secondary" focused />
-        </Input> */}
-    
-  
+        {/* <Input>Zipcode</Input> */}
+        {/* <Input>Password</Input>
+        <Input>Re-enter Password</Input> */}
+      </form>
+    </>
+  );
 
   const signupForm = (
     <>
-      <Input>
-        <TextField
-          className="list-group-item"
-          label="Username"
-          color="secondary"
-          value={(e) => {
-            e.preventDefault();
-            setUsername(e.target.value);
-            console.log(formData.username);
-          }}
-          focused
-          required
-        />
-      </Input>
-      <Input>
-        <TextField
-          className="list-group-item"
-          label="Zipcode"
-          color="secondary"
-          focused
-          required
-        />
-      </Input>
-      <Input>
-        <TextField
-          className="list-group-item"
-          label="Password"
-          color="secondary"
-          focused
-          required
-        />
-      </Input>
-      <Input>
-        <TextField
-          className="list-group-item"
-          label="Re-enter Password"
-          color="secondary"
-          focused
-          required
-        />
-      </Input>
+      <form>
+        <div>
+          <label for="username">Username:</label>
+          <Input name="username" required>
+            {" "}
+          </Input>
+        </div>
+        <div>
+          <label for="password">Password:</label>
+          <Input name="password" type="password" required>
+            {" "}
+          </Input>
+        </div>
+        <div>
+          <label for="retype">Retype Password:</label>
+          <Input name="retype" type="password" required></Input>
+        </div>
+
+        {/* <label for="username">Username:</label> 
+        <Input name="username"required></Input>
+        <label for="zipcode">Zipcode:</label> 
+        <Input name="zipcode"type="text"required></Input>
+        <label for="password">Password:</label>
+        <Input name="password" type="password" required></Input>
+        <label for="password">Re-Enter Password:</label> 
+        <Input name="password" type="password" required></Input> */}
+      </form>
     </>
   );
 
@@ -190,7 +104,7 @@ function ListGroup() {
       <div
         className="container text-center"
         style={{
-          backgroundColor: 'beige',
+          backgroundColor: "beige",
           backgroundSize: "cover",
         }}
       >
@@ -217,23 +131,13 @@ function ListGroup() {
         <Fragment>
           <h1 style={{ color: "black" }}> Earthquake Tracker</h1>
           {logging ? (
-            <div style={{ color: "white" }}>Please Login Below</div>
+            <div style={{ color: "black" }}>Please Login Below</div>
           ) : (
-            <div style={{ color: "white" }}>Please Signup Below</div>
+            <div style={{ color: "black" }}>Please Signup Below</div>
           )}
           {items.length === 0 && <p>No items found</p>}
-          <form
-            action="POST"
-            className="list-group"
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              backgroundColor: "whitesmoke",
-            }}
-          >
-            {logging ? loginForm : signupForm}
-          </form>
+
+          {logging ? loginForm : signupForm}
 
           {/* <ul className="list-group">
                 {items.map((item, i) => 
@@ -244,8 +148,11 @@ function ListGroup() {
                     {item}
                 </li>)}
                 </ul> */}
+          <div></div>
           <Link to="/main">
-            <Button variant="contained">Submit</Button>
+            <Button variant="contained" onClick={(e) => {}}>
+              Submit
+            </Button>
           </Link>
         </Fragment>
       </div>
