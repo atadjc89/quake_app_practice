@@ -8,8 +8,9 @@ exports.up = async function(knex) {
         table.increments();
         table.string('username');
         table.string('password');
-        table.integer('zipcode');
-        table.specificType('earthquakes', 'text[]');
+        table.integer('lat');
+        table.integer('lng');
+        //table.specificType('earthquakes', 'text[]');
     })
 };
 

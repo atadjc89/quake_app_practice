@@ -17,31 +17,52 @@ const getMessage = () => {
   return items.length === 0 ? <p>No items found</p> : null;
 };
 
-function ListGroup() {
-  const [logging, setLogging] = useState(false);
+function ListGroup({
+  username,
+  setUsername,
+  password,
+  setPassword,
+  latitude,
+  setLatitude,
+  longitude,
+  setLongitude,
+  againpassword,
+  setAgainpassword,
+}) {
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [zipcode, setZipcode] = useState("");
-
-  const formData = new FormData();
+  const [pagestate, setPagestate] = useState("login");
 
   const form_info = {
     username: username,
     password: password,
-    zipcode: zipcode,
+    latitude: latitude,
+    longitude: longitude,
   };
 
-  const sendUserInfo = async (action) => {
-    let req = req.body;
-    //
-    let request = await axios
-      .post(`/${action}`, {
-        username: formData.username,
-        password: formData.password,
-        zipcode: formData.zipcode,
-      })
-      .then((res) => {});
+  const sendUserInfo = async () => {
+    let body = {};
+    console.log('here', pagestate)
+    if (pagestate === "signup") {
+      //signup
+      body = {
+        username: username,
+        password: password,
+        coordinates: [latitude, longitude],
+      };
+    } else {
+      //login
+      body = {
+        username: username,
+        password: password
+      };
+    }
+    let request = await axios.post(`http://localhost:5000/${pagestate}`, body).then(async (res) => {
+        console.log('response here');
+
+        let data = res.data;
+        console.log('data', data);
+
+    });
   };
 
   const loginForm = (
@@ -49,20 +70,34 @@ function ListGroup() {
       <form>
         <div>
           <label for="username">Username:</label>
-          <Input name="username" required>
+          <Input
+            name="username"
+            type="text"
+            value={username}
+            onChange={(e) => {
+              e.preventDefault();
+              setUsername(e.target.value);
+            }}
+            required
+          >
             {" "}
           </Input>
         </div>
         <div>
           <label for="password">Password:</label>
-          <Input name="password" type="password" required>
+          <Input
+            name="password"
+            type="password"
+            value={password}
+            onChange={(e) => {
+              e.preventDefault();
+              setPassword(e.target.value);
+            }}
+            required
+          >
             {" "}
           </Input>
         </div>
-
-        {/* <Input>Zipcode</Input> */}
-        {/* <Input>Password</Input>
-        <Input>Re-enter Password</Input> */}
       </form>
     </>
   );
@@ -72,29 +107,73 @@ function ListGroup() {
       <form>
         <div>
           <label for="username">Username:</label>
-          <Input name="username" required>
+          <Input name="username" 
+          value={username}
+            onChange={(e) => {
+              e.preventDefault();
+              setUsername(e.target.value);
+            }}
+            
+            required>
             {" "}
           </Input>
         </div>
         <div>
           <label for="password">Password:</label>
-          <Input name="password" type="password" required>
+          <Input
+            name="password"
+            type="password"
+            value={password}
+            onChange={(e) => {
+              e.preventDefault();
+              setPassword(e.target.value);
+            }}
+            required
+          >
             {" "}
           </Input>
         </div>
         <div>
           <label for="retype">Retype Password:</label>
-          <Input name="retype" type="password" required></Input>
+          <Input
+            name="retype"
+            type="password"
+            value={againpassword}
+            onChange={(e) => {
+              e.preventDefault();
+              setAgainpassword(e.target.value);
+            }}
+            required
+          ></Input>
         </div>
+        <div>
+          <label for="coordinates">Please Provide Coordinates:</label>
 
-        {/* <label for="username">Username:</label> 
-        <Input name="username"required></Input>
-        <label for="zipcode">Zipcode:</label> 
-        <Input name="zipcode"type="text"required></Input>
-        <label for="password">Password:</label>
-        <Input name="password" type="password" required></Input>
-        <label for="password">Re-Enter Password:</label> 
-        <Input name="password" type="password" required></Input> */}
+          <input
+            type="number"
+            id="lat"
+            name="latitude"
+            min="-90"
+            max="90"
+            value={latitude}
+            onChange={(e) => {
+              e.preventDefault();
+              setLatitude(e.target.value);
+            }}
+          />
+          <input
+            type="number"
+            id="long"
+            name="longitude"
+            min="-180"
+            max="180"
+            value={longitude}
+            onChange={(e) => {
+              e.preventDefault();
+              setLongitude(e.target.value);
+            }}
+          />
+        </div>
       </form>
     </>
   );
@@ -112,8 +191,12 @@ function ListGroup() {
           variant="contained"
           onClick={(e) => {
             e.preventDefault();
-            setLogging(true);
-            console.log("logging in...");
+            setUsername("");
+            setPassword("");
+            setLatitude("");
+            setLongitude("");
+            setPagestate("login");
+            console.log("logging in...", pagestate);
           }}
         >
           Login
@@ -122,37 +205,39 @@ function ListGroup() {
           variant="contained"
           onClick={(e) => {
             e.preventDefault();
-            setLogging(false);
-            console.log("signing up...");
+            setUsername("");
+            setPassword("");
+            setAgainpassword("");
+            setLatitude("");
+            setLongitude("");
+            setPagestate("signup");
+            console.log("signing up...", pagestate);
           }}
         >
           Signup
         </Button>
         <Fragment>
           <h1 style={{ color: "black" }}> Earthquake Tracker</h1>
-          {logging ? (
+          {pagestate === "login" ? (
             <div style={{ color: "black" }}>Please Login Below</div>
           ) : (
             <div style={{ color: "black" }}>Please Signup Below</div>
           )}
           {items.length === 0 && <p>No items found</p>}
 
-          {logging ? loginForm : signupForm}
+          {pagestate === "login" ? loginForm : signupForm}
 
-          {/* <ul className="list-group">
-                {items.map((item, i) => 
-                <li 
-                key={item} 
-                onClick={(e) => console.log(item, i)} 
-                className="list-group-item">
-                    {item}
-                </li>)}
-                </ul> */}
           <div></div>
           <Link to="/main">
-            <Button variant="contained" onClick={(e) => {}}>
-              Submit
-            </Button>
+          <Button
+            variant="contained"
+            onClick={(e) => {
+              e.preventDefault();
+              sendUserInfo();
+            }}
+          >
+            Submit
+          </Button>
           </Link>
         </Fragment>
       </div>

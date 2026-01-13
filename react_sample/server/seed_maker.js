@@ -6,7 +6,7 @@ let func = async () => {
   let quakes = async () => {
     let response = await axios
       .get(
-        "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2025-12-25&endtime=2026-01-09&minmagnitude=5"
+        "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2018-01-01&endtime=2026-01-11&minmagnitude=5"
       )
       .then(async (res) => {
         let data = await res.data;
