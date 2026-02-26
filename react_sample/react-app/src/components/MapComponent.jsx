@@ -24,7 +24,7 @@ const containerStyle = {
   width: "800px",
   height: "500px",
 };
-const center = {
+var center = {
   lat: -69,
   lng: -13,
 };
@@ -47,8 +47,12 @@ function MyMapComponent({
   const [hide, setHide] = useState("hidden");
   const [spot, setSpot] = useState([]);
   const [quakes, setQuakes] = useState([]);
-  const [move, setMove] = useState('translate(-50%, -50%)')
+  const [move, setMove] = useState('translate(0, 0)')
 
+  const [position, setPosition] = useState({
+  lat: -69,
+  lng: -13,
+})
   const [quakedata, setQuakeData] = useState({
     title: null,
     date: null,
@@ -59,6 +63,8 @@ function MyMapComponent({
   })
   // const [zipcode, setZipcode] = useState("");
   // const [username, setUsername] = useState("");
+  // center.lat = latitude;
+  // center.lng = longitude
   const [news, setNews] = useState([]);
   const getUserData = async () => {
     // let user = sessionStorage.getItem("username");
@@ -75,12 +81,15 @@ function MyMapComponent({
   };
 
   const getQuakes = async () => {
+    console.log('check check :::', username, latitude, longitude);
     let response = await axios
       .get(
-        "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2024-01-01&endtime=2026-01-03&minmagnitude=6"
+      `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2025-06-01&endtime=2026-02-02&maxradiuskm=2000&latitude=${latitude}&longitude=${longitude}&minmagnitude=3`
       )
+      //"https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2024-01-01&endtime=2026-01-03&minmagnitude=6"
       .then((response) => {
         let quake_information = response.data.features.map((item) => {
+          console.log(item, 'quake')
           return {
             title: item.properties.title,
             date: item.properties.time,
@@ -90,11 +99,14 @@ function MyMapComponent({
             coordinates: [item.geometry.coordinates[0], item.geometry.coordinates[1]]
           };
         });
+        console.log('QUAKES', response.data)
+
         setQuakes(quake_information);
+
       });
     let news = await axios
       .get(
-        "https://newsapi.org/v2/everything?q=earthquake&apiKey=7180e9e0349140de95cd3e91a01059a4"
+        "https://newsapi.org/v2/everything?q=quake&apiKey=7180e9e0349140de95cd3e91a01059a4"
       )
       .then((other_response) => {
         let news_data = other_response.data;
@@ -102,17 +114,30 @@ function MyMapComponent({
 
         //console.log(, 'news data')
       });
-    };
-    
+
+    //let other_response = await axios.
+
+    // let userInfo = {
+    //   userName: sessionStorage.getItem("userName"),
+    //   zip: sessionStorage.getItem("zipCode")
+    // }
+  };
+  // {
+  //           title: quake.properties.title,
+  //           date: quake.properties.time,
+  //           magnitude: quake.properties.mag,
+  //           location: quake.properties.place,
+  //           url: quake.properties.url
+  //           coordinates: [quake.geometry.coordinates[0], quake.geometry.coordinates[1]]
+  //         }
 
   const card = (
     <Box
       sx={{
         minWidth: 275,
         maxWidth: '100px',
-        zIndex: 10,
         visibility: hide,
-        position: 'absolute',
+        position: "absolute",
         transform: {move},
         top: '0',
         left: '0'
@@ -124,13 +149,13 @@ function MyMapComponent({
             gutterBottom
             sx={{ color: "text.secondary", fontSize: 14 }}
           >
-            {quakedata.title}
+            Word of the Day
           </Typography>
           <Typography variant="h5" component="div">
-            {quakedata.magnitude} Magnitude
+            benevolent
           </Typography>
           <Typography sx={{ color: "text.secondary", mb: 1.5 }}>
-            {quakedata.date}
+            adjective
           </Typography>
           <Typography variant="body2">
             well meaning and kindly.
@@ -147,12 +172,12 @@ function MyMapComponent({
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
-    googleMapsApiKey: "AIzaSyDjTCgXwsaS2U10DdOVWJd0KRkVVwaZ8Ug",
+    googleMapsApiKey: GOOGLE_API_KEY,
   });
   const [userData, setUserData] = useState(null);
   const [map, setMap] = React.useState(null);
   const onLoad = React.useCallback(function callback(map) {
-    const bounds = new window.google.maps.LatLngBounds(center);
+    const bounds = new window.google.maps.LatLngBounds(position);
     map.fitBounds(bounds);
     setMap(map);
   }, []);
@@ -160,23 +185,50 @@ function MyMapComponent({
     setMap(null);
   }, []);
   useEffect(() => {
+    
     getQuakes();
+    
+    console.log('check check :::', username);
     //axios call to express endpoint (original endpoint moved to express file)
     //setUserData(userInfo);
 
     //console.log(coordinates, 'the coords')
     //setQuakes(coordinates)
     //console.log(quakes, 'the quakes')
+    setPosition({lat: Number(latitude), lng: Number(longitude)})
   }, []);
   return isLoaded ? (
     <>
       <h3> Hello, {username} </h3>
-      <h4>Your Zipcode: </h4>
+      <h4>Check Out Local Quake Readings!</h4>
       {card}
       <GoogleMap
+        
         mapContainerStyle={containerStyle}
-        center={center}
-        options={{ minZoom: 3, zoom: 4, maxZoom: 3 }}
+        zoom={13}
+        //center={() => {return position}}
+        //options={{ minZoom: 3,maxZoom: 12 }}
+//         options={{
+//   minZoom: 3,
+//   zoom: 3,
+//   maxZoom: 5,
+// }}
+options={{
+  minZoom: 3,
+  zoom: 3,
+  maxZoom: 5,
+  mapTypeControl: false,
+  streetViewControl: false,
+  fullscreenControl: false,
+}}
+        // options={{
+        // minZoom: 3,
+        // zoom: 4,
+        // maxZoom: 6,
+        // mapTypeControl: false,
+        // streetViewControl: false,
+        // fullscreenControl: false,
+        // }}
         zoom={10}
         onLoad={onLoad}
         onUnmount={onUnmount}
@@ -197,9 +249,8 @@ function MyMapComponent({
                   title: quake.title,
                   date: quake.time,
                   magnitude: quake.magnitude,
-                  location: quake.place,
-                  url: quake.url,
-                  coordinates: quake.coordinates
+                  location: quake,place,
+                  url: quake.url
                 });
                 console.log(
                   "page coordinates",
@@ -212,9 +263,9 @@ function MyMapComponent({
           );
         })}
         <Marker
-          postion={center}
+          postion={position}
           onClick={(e) => {
-            console.log("Zipcode Marker", center);
+            console.log("Zipcode Marker", position);
           }}
         ></Marker>
       </GoogleMap>

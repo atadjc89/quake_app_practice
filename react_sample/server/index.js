@@ -19,11 +19,31 @@ app.use(cors())
 //get main page
 //get user data
 
-//post new quake data
+app.get('/users', async (req, res) => {
+  try {
+    let users = await db('users').select('*');
+    res.json(users);
+  } catch (err) {
+    res.json(err);
+  }
+})//post new quake data
+
+
+
+app.get("/quakes", async (req, res) => {
+  let params = req.query
+  try {
+    let data = await db('quakes').select('*')
+    console.log('data', data[0])
+    res.json(data[0])
+  } catch (err) {
+    res.json(err)
+  }
+})
 
 app.get("/main:username", async (req, res) => {
   try {
-    let username = username;
+    let username = req.query.username;
     let date = "2026-01-01";
     let earthquakes = await db("quakes").where({ time: date });
     console.log(earthquakes, "the data");
@@ -39,6 +59,8 @@ app.get("/main:username", async (req, res) => {
 
 app.post("/signup", async (req, res) => {
     console.log('here', req.body)
+    let lat = req.body.coordinates[0] || -50;
+    let lng = req.body.coordinates[1] || 50;
   try {
     // let body = req.body;
     // let user = req.body.username;
@@ -51,16 +73,24 @@ app.post("/signup", async (req, res) => {
     //send API call to the USGS url endpoint to retrieve specific earthquake data
     //send back response object with one data property containing array of lat/lng for user location, then an obj containing USGS data to be reshaped by frontend
     console.log(req.body, 'body data')
+    console.log('stuff', {
+      username: req.body.username,
+      password: req.body.password,
+      lat: lat,
+      lng: lng,
+    })
     let newUser = await db("users").insert({
       username: req.body.username,
       password: req.body.password,
-      lat: req.body.coordinates[0],
-      lng: req.body.coordinates[1],
-    });
+      lat: req.body.coordinates[0] || -50,
+      lng: req.body.coordinates[1] || 50,
+    }).returning('*');
     if (newUser) {
       console.log("new user created");
       res.status(201).json({ info: newUser });
     }
+    // console.log(newUser, 'new user')
+    // res.status(201).json({ info: newUser });
   } catch (err) {
     res.json(err);
   }
@@ -70,14 +100,17 @@ app.post("/login", async (req, res) => {
   console.log("request here");
   try {
     let body = req.body;
-    let user = req.body.username;
-    let pass = req.body.password;
+    let user = body.username;
+    let pass = body.password;
     let zip = Number(req.body.zipcode);
     let user_info = await db("users")
-      .where({ username: user, password: pass })
+      .where({ username: user})
       .first();
+    
     if (user_info && user_info.password === pass) {
-      res.status(200);
+      res.status(200).json({info: user_info});
+    } else {
+      res.status(400).json({error: "Invalid credentials"});
     }
   } catch (err) {
     res.json(err);
@@ -88,6 +121,21 @@ app.post("/login", async (req, res) => {
   //add the username to the username column , password to the password column , add numerical zip to the zipcode column
   //send API call to the USGS url endpoint to retrieve specific earthquake data
   //send back response object with one data property containing array of lat/lng for user location, then an obj containing USGS data to be reshaped by frontend
+});
+
+app.put("/users/:id", async (req, res) => {
+  try {
+    let id = req.params.id;
+    let body = req.body;
+    let updatedUser = await db("users").where({ id: id }).update(body).returning('*');
+    if (updatedUser) {
+      res.status(200).json({ info: updatedUser });
+    } else {
+      res.status(404).json({ error: "User not found" });
+    }
+  } catch (err) {
+    res.json(err);
+  }
 });
 
 app.post("/quakes/report:id", async (req, res) => {

@@ -3,7 +3,10 @@ import reactLogo from './assets/react.svg'
 import axios from 'axios'; //import './App.css'
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import { Fragment } from 'react';
-
+import { useAuth0 } from '@auth0/auth0-react';
+import LoginButton from './LoginButton';
+import LogoutButton from './LogoutButton';
+import Profile from './Profile';
 import MyMapComponent from './components/MapComponent'
 import ListGroup from './components/ListGroup';
 

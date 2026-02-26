@@ -58,10 +58,20 @@ function ListGroup({
     }
     let request = await axios.post(`http://localhost:5000/${pagestate}`, body).then(async (res) => {
         console.log('response here');
+        if (res.status === 400) {
+          alert("invalid credentials")
+        } else {
+          let data = res.data;
+          console.log('data', data.info[0]);
+          setUsername(username)
+          setLatitude(data.info[0].lat)
+          setLongitude(data.info[0].lng)
+        }
+        // if (res.status === 201) {
 
-        let data = res.data;
-        console.log('data', data);
-
+        //   setUsername(username);
+        // }
+        
     });
   };
 
@@ -69,7 +79,7 @@ function ListGroup({
     <>
       <form>
         <div>
-          <label for="username">Username:</label>
+          <label for="username" style={{color: "black"}}>Username:</label>
           <Input
             name="username"
             type="text"
@@ -84,7 +94,7 @@ function ListGroup({
           </Input>
         </div>
         <div>
-          <label for="password">Password:</label>
+          <label for="password" style={{color: "black"}}>Password:</label>
           <Input
             name="password"
             type="password"
@@ -106,7 +116,7 @@ function ListGroup({
     <>
       <form>
         <div>
-          <label for="username">Username:</label>
+          <label for="username" style={{color: "black"}}>Username:</label>
           <Input name="username" 
           value={username}
             onChange={(e) => {
@@ -119,7 +129,7 @@ function ListGroup({
           </Input>
         </div>
         <div>
-          <label for="password">Password:</label>
+          <label for="password" style={{color: "black"}}>Password:</label>
           <Input
             name="password"
             type="password"
@@ -134,7 +144,7 @@ function ListGroup({
           </Input>
         </div>
         <div>
-          <label for="retype">Retype Password:</label>
+          <label for="retype" style={{color: "black"}}>Retype Password:</label>
           <Input
             name="retype"
             type="password"
@@ -147,9 +157,10 @@ function ListGroup({
           ></Input>
         </div>
         <div>
-          <label for="coordinates">Please Provide Coordinates:</label>
+          <label for="coordinates" style={{color: "black"}}>Please Provide Coordinates:</label>
 
           <input
+           
             type="number"
             id="lat"
             name="latitude"
@@ -161,7 +172,8 @@ function ListGroup({
               setLatitude(e.target.value);
             }}
           />
-          <input
+          <input 
+           
             type="number"
             id="long"
             name="longitude"
@@ -232,8 +244,27 @@ function ListGroup({
           <Button
             variant="contained"
             onClick={(e) => {
-              e.preventDefault();
-              sendUserInfo();
+              //e.preventDefault();
+              if (pagestate === "signup" && password !== againpassword) {
+                e.preventDefault()
+                alert("Passwords do not match");
+                return;
+              } else if (password.length < 5) {
+                e.preventDefault()
+                alert("Password must be at least 5 characters long");
+                return;
+              } else if (latitude > 90 || latitude < -90 || longitude > 180 || longitude < -180) {
+                e.preventDefault()
+                alert("Please use proper coordinates: -90 > latitude < 90 ***** -180 > longitude < 180")
+                return;
+              } else if (username === "" || password === "" || latitude === "" || longitude === "") {
+                e.preventDefault()
+                alert("Please fill in all fields"); 
+                return;
+              } else {
+                sendUserInfo();
+                //window.location.href = "http://localhost:5173/main"
+              }
             }}
           >
             Submit
