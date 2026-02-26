@@ -21,7 +21,7 @@ import Typography from "@mui/material/Typography";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import App from "../App.jsx";
-import { Carousel } from "react-bootstrap";
+import { Carousel, CarouselCaption } from "react-bootstrap";
 const containerStyle = {
   width: "800px",
   height: "500px",
@@ -279,10 +279,11 @@ options={{
 
       <Carousel>
         {news.map((article) => {
+          console.log('article', article);
           return (
             <Carousel.Item interval={1500} style={{ maxWidth: "100px" }}>
               <img
-                style={{ maxHeight: "200px", objectFit: "cover" }}
+                style={{ maxHeight: "500px", objectFit: "cover" }}
                 className="d-block w-100"
                 src={article.urlToImage}
               />
@@ -290,6 +291,9 @@ options={{
                 <h3 style={{ color: "black" }}>{article.title}</h3>
                 <p style={{ color: "black" }}>{article.description}</p>
               </Carousel.Caption>
+              <CarouselCaption>
+                <a href={article.url}></a>
+              </CarouselCaption>
             </Carousel.Item>
           );
         })}
