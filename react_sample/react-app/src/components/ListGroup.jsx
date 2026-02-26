@@ -192,10 +192,23 @@ function ListGroup({
 
   return (
     <>
+      <div 
+      style={
+        {display: 'flex',
+          flexDirection: 'row-reverse',
+        }
+      }>
+        <div style={{
+          
+          backgroundImage: `url('https://wallpaperaccess.com/full/1989921.jpg')`
+        }}>
+          <img></img>
       <div
+
         className="container text-center"
         style={{
-          backgroundColor: "beige",
+          
+          backgroundColor: "#92abcfb5",
           backgroundSize: "cover",
         }}
       >
@@ -228,6 +241,7 @@ function ListGroup({
         >
           Signup
         </Button>
+        
         <Fragment>
           <h1 style={{ color: "black" }}> Earthquake Tracker</h1>
           {pagestate === "login" ? (
@@ -271,6 +285,14 @@ function ListGroup({
           </Button>
           </Link>
         </Fragment>
+        
+        </div>
+      </div>
+      <div>
+        <video autoPlay loop muted style={{ width: "100%", height: "100%", objectFit: "cover" }}>
+          <source src="https://hrcdn.net/fcore/assets/onboarding/globe-5fdfa9a0f4.mp4" type="video/mp4"></source>
+        </video>
+      </div>
       </div>
     </>
   );
