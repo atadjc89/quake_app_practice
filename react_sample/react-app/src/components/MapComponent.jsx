@@ -1,4 +1,4 @@
-const GOOGLE_API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
+const GOOGLE_API_KEY = import.meta.env.GOOGLE_API_KEY;
 //require("dotenv").config();
 import React from "react";
 import { useState, useEffect } from "react";
@@ -83,7 +83,7 @@ function MyMapComponent({
   };
 
   const getQuakes = async () => {
-    console.log('check check :::', username, latitude, longitude);
+    //console.log('check check :::', username, latitude, longitude);
     let response = await axios
       .get(
       `https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2025-06-01&endtime=2026-02-02&maxradiuskm=2000&latitude=${latitude}&longitude=${longitude}&minmagnitude=3`
@@ -189,8 +189,9 @@ function MyMapComponent({
   useEffect(() => {
     
     getQuakes();
+    console.log('get quakes function', GOOGLE_API_KEY);
     
-    console.log('check check :::', username);
+    console.log('check check :::', 'username', GOOGLE_API_KEY);
     //axios call to express endpoint (original endpoint moved to express file)
     //setUserData(userInfo);
 
@@ -281,7 +282,7 @@ options={{
           return (
             <Carousel.Item interval={1500} style={{ maxWidth: "100px" }}>
               <img
-                style={{ maxHeight: "500px", objectFit: "cover" }}
+                style={{ maxHeight: "200px", objectFit: "cover" }}
                 className="d-block w-100"
                 src={article.urlToImage}
               />

@@ -29,7 +29,6 @@ function ListGroup({
   againpassword,
   setAgainpassword,
 }) {
-
   const [pagestate, setPagestate] = useState("login");
 
   const form_info = {
@@ -41,7 +40,7 @@ function ListGroup({
 
   const sendUserInfo = async () => {
     let body = {};
-    console.log('here', pagestate)
+    console.log("here", pagestate);
     if (pagestate === "signup") {
       //signup
       body = {
@@ -53,33 +52,36 @@ function ListGroup({
       //login
       body = {
         username: username,
-        password: password
+        password: password,
       };
     }
-    let request = await axios.post(`http://localhost:5000/${pagestate}`, body).then(async (res) => {
-        console.log('response here');
+    let request = await axios
+      .post(`http://localhost:5000/${pagestate}`, body)
+      .then(async (res) => {
+        console.log("response here");
         if (res.status === 400) {
-          alert("invalid credentials")
+          alert("invalid credentials");
         } else {
           let data = res.data;
-          console.log('data', data.info[0]);
-          setUsername(username)
-          setLatitude(data.info[0].lat)
-          setLongitude(data.info[0].lng)
+          console.log("data", data.info[0]);
+          setUsername(username);
+          setLatitude(data.info[0].lat);
+          setLongitude(data.info[0].lng);
         }
         // if (res.status === 201) {
 
         //   setUsername(username);
         // }
-        
-    });
+      });
   };
 
   const loginForm = (
     <>
       <form>
         <div>
-          <label for="username" style={{color: "black"}}>Username:</label>
+          <label for="username" style={{ color: "black" }}>
+            Username:
+          </label>
           <Input
             name="username"
             type="text"
@@ -94,7 +96,9 @@ function ListGroup({
           </Input>
         </div>
         <div>
-          <label for="password" style={{color: "black"}}>Password:</label>
+          <label for="password" style={{ color: "black" }}>
+            Password:
+          </label>
           <Input
             name="password"
             type="password"
@@ -116,20 +120,25 @@ function ListGroup({
     <>
       <form>
         <div>
-          <label for="username" style={{color: "black"}}>Username:</label>
-          <Input name="username" 
-          value={username}
+          <label for="username" style={{ color: "black" }}>
+            Username:
+          </label>
+          <Input
+            name="username"
+            value={username}
             onChange={(e) => {
               e.preventDefault();
               setUsername(e.target.value);
             }}
-            
-            required>
+            required
+          >
             {" "}
           </Input>
         </div>
         <div>
-          <label for="password" style={{color: "black"}}>Password:</label>
+          <label for="password" style={{ color: "black" }}>
+            Password:
+          </label>
           <Input
             name="password"
             type="password"
@@ -144,7 +153,9 @@ function ListGroup({
           </Input>
         </div>
         <div>
-          <label for="retype" style={{color: "black"}}>Retype Password:</label>
+          <label for="retype" style={{ color: "black" }}>
+            Retype Password:
+          </label>
           <Input
             name="retype"
             type="password"
@@ -157,10 +168,11 @@ function ListGroup({
           ></Input>
         </div>
         <div>
-          <label for="coordinates" style={{color: "black"}}>Please Provide Coordinates:</label>
+          <label for="coordinates" style={{ color: "black" }}>
+            Please Provide Coordinates:
+          </label>
 
           <input
-           
             type="number"
             id="lat"
             name="latitude"
@@ -172,8 +184,7 @@ function ListGroup({
               setLatitude(e.target.value);
             }}
           />
-          <input 
-           
+          <input
             type="number"
             id="long"
             name="longitude"
@@ -192,107 +203,120 @@ function ListGroup({
 
   return (
     <>
-      <div 
-      style={
-        {display: 'flex',
-          flexDirection: 'row-reverse',
-        }
-      }>
-        <div style={{
-          
-          backgroundImage: `url('https://wallpaperaccess.com/full/1989921.jpg')`
-        }}>
+      <div style={{ display: "flex", flexDirection: "row-reverse" }}>
+        <div
+          style={{
+            backgroundImage: `url('https://wallpaperaccess.com/full/1989921.jpg')`,
+          }}
+        >
           <img></img>
-      <div
-
-        className="container text-center"
-        style={{
-          
-          backgroundColor: "#92abcfb5",
-          backgroundSize: "cover",
-        }}
-      >
-        <Button
-          variant="contained"
-          onClick={(e) => {
-            e.preventDefault();
-            setUsername("");
-            setPassword("");
-            setLatitude("");
-            setLongitude("");
-            setPagestate("login");
-            console.log("logging in...", pagestate);
-          }}
-        >
-          Login
-        </Button>
-        <Button
-          variant="contained"
-          onClick={(e) => {
-            e.preventDefault();
-            setUsername("");
-            setPassword("");
-            setAgainpassword("");
-            setLatitude("");
-            setLongitude("");
-            setPagestate("signup");
-            console.log("signing up...", pagestate);
-          }}
-        >
-          Signup
-        </Button>
-        
-        <Fragment>
-          <h1 style={{ color: "black" }}> Earthquake Tracker</h1>
-          {pagestate === "login" ? (
-            <div style={{ color: "black" }}>Please Login Below</div>
-          ) : (
-            <div style={{ color: "black" }}>Please Signup Below</div>
-          )}
-          {items.length === 0 && <p>No items found</p>}
-
-          {pagestate === "login" ? loginForm : signupForm}
-
-          <div></div>
-          <Link to="/main">
-          <Button
-            variant="contained"
-            onClick={(e) => {
-              //e.preventDefault();
-              if (pagestate === "signup" && password !== againpassword) {
-                e.preventDefault()
-                alert("Passwords do not match");
-                return;
-              } else if (password.length < 5) {
-                e.preventDefault()
-                alert("Password must be at least 5 characters long");
-                return;
-              } else if (latitude > 90 || latitude < -90 || longitude > 180 || longitude < -180) {
-                e.preventDefault()
-                alert("Please use proper coordinates: -90 > latitude < 90 ***** -180 > longitude < 180")
-                return;
-              } else if (username === "" || password === "" || latitude === "" || longitude === "") {
-                e.preventDefault()
-                alert("Please fill in all fields"); 
-                return;
-              } else {
-                sendUserInfo();
-                //window.location.href = "http://localhost:5173/main"
-              }
+          <div
+            className="container text-center"
+            style={{
+              backgroundColor: "#92abcfb5",
+              backgroundSize: "cover",
             }}
           >
-            Submit
-          </Button>
-          </Link>
-        </Fragment>
-        
+            <Button
+              variant="contained"
+              onClick={(e) => {
+                e.preventDefault();
+                setUsername("");
+                setPassword("");
+                setLatitude("");
+                setLongitude("");
+                setPagestate("login");
+                console.log("logging in...", pagestate);
+              }}
+            >
+              Login
+            </Button>
+            <Button
+              variant="contained"
+              onClick={(e) => {
+                e.preventDefault();
+                setUsername("");
+                setPassword("");
+                setAgainpassword("");
+                setLatitude("");
+                setLongitude("");
+                setPagestate("signup");
+                console.log("signing up...", pagestate);
+              }}
+            >
+              Signup
+            </Button>
+
+            <Fragment>
+              <h1 style={{ color: "black" }}> Earthquake Tracker</h1>
+              {pagestate === "login" ? (
+                <div style={{ color: "black" }}>Please Login Below</div>
+              ) : (
+                <div style={{ color: "black" }}>Please Signup Below</div>
+              )}
+              {items.length === 0 && <p>No items found</p>}
+
+              {pagestate === "login" ? loginForm : signupForm}
+
+              <div></div>
+              <Link to="/main">
+                <Button
+                  variant="contained"
+                  onClick={(e) => {
+                    //e.preventDefault();
+                    if (pagestate === "signup" && password !== againpassword) {
+                      e.preventDefault();
+                      alert("Passwords do not match");
+                      return;
+                    } else if (password.length < 5) {
+                      e.preventDefault();
+                      alert("Password must be at least 5 characters long");
+                      return;
+                    } else if (
+                      latitude > 90 ||
+                      latitude < -90 ||
+                      longitude > 180 ||
+                      longitude < -180
+                    ) {
+                      e.preventDefault();
+                      alert(
+                        "Please use proper coordinates: -90 > latitude < 90 ***** -180 > longitude < 180",
+                      );
+                      return;
+                    } else if (
+                      username === "" ||
+                      password === "" ||
+                      latitude === "" ||
+                      longitude === ""
+                    ) {
+                      e.preventDefault();
+                      alert("Please fill in all fields");
+                      return;
+                    } else {
+                      sendUserInfo();
+                      //window.location.href = "http://localhost:5173/main"
+                    }
+                  }}
+                >
+                  Submit
+                </Button>
+              </Link>
+            </Fragment>
+          </div>
         </div>
-      </div>
-      <div>
-        <video autoPlay loop muted style={{ width: "100%", height: "100%", objectFit: "cover" }}>
-          <source src="https://hrcdn.net/fcore/assets/onboarding/globe-5fdfa9a0f4.mp4" type="video/mp4"></source>
-        </video>
-      </div>
+        <div>
+          <video
+            autoPlay
+            loop
+            muted
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+          >
+            <source
+              src="https://hrcdn.net/fcore/assets/onboarding/globe-5fdfa9a0f4.mp4"
+              type="video/mp4"
+            ></source>
+          </video>
+        </div>
       </div>
     </>
   );
