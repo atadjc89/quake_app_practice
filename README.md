@@ -25,7 +25,7 @@ _____________________________________________________
 ```
 npm run dev
 ```
-* Click the link `http://localhost:5174/ to open the webpage
+* Click the link http://localhost:5174/ to open the webpage
 
 
 
