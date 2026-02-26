@@ -30,7 +30,7 @@ function ListGroup({
   setAgainpassword,
 }) {
   const [pagestate, setPagestate] = useState("login");
-
+  const [valid, setValid] = useState(true);
   const form_info = {
     username: username,
     password: password,
@@ -65,8 +65,8 @@ function ListGroup({
           let data = res.data;
           console.log("data", data.info[0]);
           setUsername(username);
-          setLatitude(data.info[0].lat);
-          setLongitude(data.info[0].lng);
+          setLatitude(data.lat);
+          setLongitude(data.lng);
         }
         // if (res.status === 201) {
 
@@ -115,6 +115,16 @@ function ListGroup({
       </form>
     </>
   );
+
+  const validLoginBanner = (
+    <>
+    <div style={{
+      backgroundColor: 'red'
+    }}>
+    <p>Invalid Login Information. Please Try Again</p>
+    </div>
+    </>
+  )
 
   const signupForm = (
     <>
@@ -262,40 +272,63 @@ function ListGroup({
               <Link to="/main">
                 <Button
                   variant="contained"
-                  onClick={(e) => {
+                  onClick={async (e) => {
                     //e.preventDefault();
-                    if (pagestate === "signup" && password !== againpassword) {
-                      e.preventDefault();
-                      alert("Passwords do not match");
-                      return;
-                    } else if (password.length < 5) {
-                      e.preventDefault();
-                      alert("Password must be at least 5 characters long");
-                      return;
-                    } else if (
-                      latitude > 90 ||
-                      latitude < -90 ||
-                      longitude > 180 ||
-                      longitude < -180
-                    ) {
-                      e.preventDefault();
-                      alert(
+                    if (pagestate === "signup") {
+
+                      if (password !== againpassword) {
+                     
+                        e.preventDefault();
+                        alert("Passwords do not match");
+                        return;
+                      } else if (password.length < 5) {
+                        e.preventDefault();
+                        alert("Password must be at least 5 characters long");
+                        return;
+                      } else if (
+                        latitude > 90 ||
+                        latitude < -90 ||
+                        longitude > 180 ||
+                        longitude < -180
+                      ) {
+                        e.preventDefault();
+                        alert(
                         "Please use proper coordinates: -90 > latitude < 90 ***** -180 > longitude < 180",
-                      );
-                      return;
-                    } else if (
-                      username === "" ||
-                      password === "" ||
-                      latitude === "" ||
-                      longitude === ""
-                    ) {
-                      e.preventDefault();
-                      alert("Please fill in all fields");
-                      return;
-                    } else {
-                      sendUserInfo();
-                      //window.location.href = "http://localhost:5173/main"
-                    }
+                        );
+                        return;
+                      } else if (
+
+                        pagestate === "signup" &&
+                        username === "" ||
+                        password === "" ||
+                        latitude === "" ||
+                        longitude === ""
+                        ) {
+                        e.preventDefault();
+                        alert("Please fill in all fields");
+                        return;
+                      } else {
+                        await sendUserInfo();
+                      }
+                    } else if (pagestate === 'login') {
+
+                        if (!valid) {
+                          // setTimeout(() => {
+                          //      setHidden(false)
+                          // }, 3000)
+                        } else if (username === "" || password === "") {
+                          e.preventDefault();
+                          alert("Please fill in all fields");
+                          return;
+                        } else {
+                          sendUserInfo();
+                          //let response = await sendUserInfo();
+                        }
+                    // } else {
+                    //     sendUserInfo();
+                    //     //window.location.href = "http://localhost:5173/main"
+                    //   }
+                    } 
                   }}
                 >
                   Submit

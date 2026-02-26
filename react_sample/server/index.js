@@ -97,7 +97,7 @@ app.post("/signup", async (req, res) => {
 });
 
 app.post("/login", async (req, res) => {
-  console.log("request here");
+  console.log("request here login");
   try {
     let body = req.body;
     let user = body.username;
@@ -108,8 +108,10 @@ app.post("/login", async (req, res) => {
       .first();
     
     if (user_info && user_info.password === pass) {
+      console.log('yay', user_info)
       res.status(200).json({info: user_info});
     } else {
+      console.log('nope!')
       res.status(400).json({error: "Invalid credentials"});
     }
   } catch (err) {

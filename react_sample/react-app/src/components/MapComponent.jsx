@@ -52,8 +52,8 @@ function MyMapComponent({
   const [move, setMove] = useState('translate(0, 0)')
 
   const [position, setPosition] = useState({
-  lat: -69,
-  lng: -13,
+  lat: Number(latitude),
+  lng: Number(longitude),
 })
   const [quakedata, setQuakeData] = useState({
     title: null,
@@ -83,6 +83,7 @@ function MyMapComponent({
   };
 
   const getQuakes = async () => {
+
     //console.log('check check :::', username, latitude, longitude);
     let response = await axios
       .get(
@@ -190,7 +191,7 @@ function MyMapComponent({
     
     getQuakes();
     console.log('get quakes function', GOOGLE_API_KEY);
-    
+    console.log('userinfo', username, position)
     console.log('check check :::', 'username', GOOGLE_API_KEY);
     //axios call to express endpoint (original endpoint moved to express file)
     //setUserData(userInfo);
