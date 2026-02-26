@@ -1,3 +1,5 @@
+const GOOGLE_API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
+//require("dotenv").config();
 import React from "react";
 import { useState, useEffect } from "react";
 import {
@@ -229,7 +231,7 @@ options={{
         // streetViewControl: false,
         // fullscreenControl: false,
         // }}
-        zoom={10}
+        
         onLoad={onLoad}
         onUnmount={onUnmount}
       >
